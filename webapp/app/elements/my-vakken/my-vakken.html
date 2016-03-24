@@ -61,6 +61,10 @@
         },
 
         fetchVakken: function() {
+          if(this.username=="")
+          {
+            page.redirect(app.baseUrl);
+          }
           console.log("FetchVakken user="+this.username);
           if (this.rol == "docent") {
             this.$.ajax.contentType="application/json";

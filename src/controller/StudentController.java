@@ -48,16 +48,19 @@ public class StudentController implements Handler {
 		ArrayList<Student> studentenVanKlas = informatieSysteem.getStudentenVanKlas(klasCode);	// medestudenten opzoeken
 		
 		JsonArrayBuilder jab = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...
-		
+
 		for (Student s : studentenVanKlas) {									// met daarin voor elke medestudent een JSON-object... 
 			if (s.getGebruikersNaam().equals(gebruikersnaam)) 					// behalve de student zelf...
 				continue;
 			else {
 				jab.add(Json.createObjectBuilder()
-						.add("naam", s.getGebruikersNaam()));
+						.add("studentnummer", s.getStudentNummer())
+						.add("voornaam", s.getVoorNaam())
+						.add("achternaam", s.getAchterNaam()));
 			}
 		}
 		
 		conversation.sendJSONMessage(jab.build().toString());					// terug naar de Polymer-GUI!
 	}
 }
+

@@ -17,8 +17,10 @@
     </style>
 
     <div>
-  			<paper-input label="gebruikersnaam" value="{{username}}"></paper-input>
-  			<paper-input label="wachtwoord" type="password" value="{{password}}"></paper-input>
+        <p>Gebruikersnaam</p>
+  			<paper-input value="{{username}}"></paper-input>
+        <p>Wachtwoord</p>
+  			<paper-input on-keypress="checkKey" type="password" value="{{password}}"></paper-input>
   			<paper-button on-click="loginHandler">Login</paper-button>
   	</div>
 
@@ -61,11 +63,16 @@
           rolstudent: {
             type: Boolean,
             notify: true
+          },
+          klas: {
+            type: String,
+            notify: true
           }
         },
 
         ready: function() {
           this.rol = "undefined";
+          this.klas = "undefined";
         },
 
         attributeChanged: function() {
@@ -79,11 +86,14 @@
           if (this.rol == "docent") {
             this.roldocent = true;
             this.rolstudent = false;
+            document.getElementById('loginStatus').innerHTML="U bent ingelogd als " + this.username;
           };
 
           if (this.rol == "student") {
             this.roldocent = false;
             this.rolstudent = true;
+            document.getElementById('loginStatus').innerHTML="U bent ingelogd als " + this.username;
+            document.getElementById('klasCode').innerHTML="Klas: " + this.waarde.klas;
           };
 
           console.log("loggedin="+this.loggedin+" | rol="+this.rol+"| roldocent="+this.roldocent+"| rolstudent="+this.rolstudent );
@@ -93,14 +103,25 @@
           this.$.ajax.contentType="application/json";
           this.$.ajax.body={
             "username":this.username,
-            "wachtwoord":this.password
+            "wachtwoord":this.password,
+            "klas":this.klas
           };
           this.$.ajax.generateRequest();
         },
 
+        checkKey:function(e){
+          var evtobj=window.event? event : e //distinguish between IE's explicit event object (window.event) and Firefox's implicit.
+          if(evtobj.keyCode==13)
+          {
+            this.loginHandler();
+          }
+        },
+
         handleLogin: function(request) {
-          this.rol = request.detail.response.rol;
-          console.log("username="+this.username+" | rol="+this.rol);
+          this.waarde = request.detail.response;
+          this.rol=this.waarde.rol;
+          console.log("username="+this.username+" | rol="+this.waarde);
+
           this.attributeChanged();
           this.password = "";
           app.route='home';

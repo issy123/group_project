@@ -5,27 +5,41 @@ import java.util.ArrayList;
 public class Docent {
 	private String gebruikersNaam;
 	private String wachtwoord;
-	private ArrayList<Vak> mijnVakken;
+	private ArrayList<Vak> vakken = new ArrayList<>();
 	
-	public Docent(String gbNm, String ww) {
-		mijnVakken = new ArrayList<Vak>();
-		gebruikersNaam = gbNm;
-		wachtwoord = ww;
+	public Docent(String gN, String ww)
+	{
+		setGebruikersNaam(gN);
+		setWachtwoord(ww);
 	}
 	
-	public String getGebruikersNaam() {
-		return gebruikersNaam;
-	}
-	
-	public boolean controleerWachtwoord(String ww) {
-		return wachtwoord.equals(ww);
-	}
-	
-	public void voegVakToe(Vak nwV) {
-		mijnVakken.add(nwV);
+	public void voegVakToe(Vak v)
+	{
+		vakken.add(v);
 	}
 	
 	public ArrayList<Vak> getVakken() {
-		return mijnVakken;
+		return vakken;
 	}
+
+	public String getGebruikersNaam() {
+		return gebruikersNaam;
+	}
+
+	public void setGebruikersNaam(String gebruikersNaam) {
+		this.gebruikersNaam = gebruikersNaam;
+	}
+
+	public String getWachtwoord() {
+		return wachtwoord;
+	}
+
+	public void setWachtwoord(String wachtwoord) {
+		this.wachtwoord = wachtwoord;
+	}
+
+	public void setVakken(ArrayList<Vak> vakken) {
+		this.vakken = vakken;
+	}
+
 }

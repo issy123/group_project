@@ -16,14 +16,18 @@
       }
     </style>
 
-    <h1 class="page-title">Overzicht van mijn medestudenten ( {{username}} )</h1>
+    <h1 class="page-title">Overzicht van mijn medestudenten</h1>
     <table>
       <tr>
-        <th>Naam</th>
+        <th>Studentnummer</th>
+        <th>Voornaam</th>
+        <th>Achternaam</th>
       </tr>
       <template is="dom-repeat" items="{{studenten}}">
         <tr>
-          <td><a href$="{{baseUrl}}users/{{item.naam}}">{{item.naam}}</td>
+          <td>{{item.studentnummer}}</td>
+          <td>{{item.voornaam}}</td>
+          <td>{{item.achternaam}}</td>
         </tr>
       </template>
     </table>
@@ -59,6 +63,10 @@
         },
 
         fetchStudenten: function() {
+          if(this.username=="")
+          {
+            page.redirect(app.baseUrl);
+          }
           console.log("FetchVakken user="+this.username);
           if (this.rol == "student") {
             this.$.ajax.contentType="application/json";

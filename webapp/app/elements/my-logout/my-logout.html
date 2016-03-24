@@ -13,7 +13,8 @@
       }
     </style>
 
-    <paper-button raised on-click="logoutHandler">Klik hier als je zeker weet dat je echt wilt uitloggen</paper-button>
+    <paper-button raised on-click="logoutHandler">Ja</paper-button>
+    <paper-button id="logNietUit">Nee</paper-button>
 
   </template>
 
@@ -34,8 +35,11 @@
 
         logoutHandler: function() {
           console.log("logoutHandler");
+          document.getElementById('overlay').style.display="none";
           this.rol = "undefined";
+          location.reload();
           app.route='home';
+          console.log(this.rol);
         },
       });
     })();

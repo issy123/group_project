@@ -16,3 +16,117 @@ body {
 [hidden="true"] {
   display: none;
 }
+
+#mainToolbar{
+  background-color: #006600;
+}
+
+.x-scope, span{
+  color:#006600;
+  font-size: 16px !important;
+}
+
+.floated-label-placeholder{
+  display: none;
+}
+
+paper-button{
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  text-transform: none;
+}
+
+.menu-name{
+  font-size: 30px !important;
+}
+
+.paper-button-0{
+  background-color: #006600;
+  color: #fff;
+  margin-top: 1em;
+}
+
+.focused-line{
+  background-color: #006600!important;
+}
+
+a{
+  text-decoration: none !important;
+  color: #000;
+}
+
+.my-login p{
+  font-weight:bold;
+  font-size: 18px;
+  margin-top: .5em;
+  margin-bottom: .5em;
+}
+
+p{
+  color:#000000 !important;
+  font-weight: normal;
+}
+
+.content{
+  height:100% !important;
+}
+
+a.iron-selected{
+  border-left: #006600 3px solid;
+}
+
+.selectable-content>a{
+  margin-bottom: .1em;
+}
+
+.selectable-content>a:hover{
+  border-left: #006600 3px solid;
+  background-color:#eee;
+}
+
+.selectable-content{
+  margin-left: 1px;
+}
+
+.paper-menu>a>span{
+  color:#000 !important;
+}
+
+tbody{
+  color:#000;
+}
+
+#overlay{
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color: rgba(0,0,0,.5);
+  z-index:200;
+}
+
+#overlay form{
+  text-align: center;
+  background-color: #eee;
+  padding:1em;
+  position:fixed;
+  top:25%;
+  opacity: 1;
+  width:25%;
+  left:37.5%;
+  border-radius: 5px;
+}
+
+iframe{
+  width:calc(854px*(2/3));
+  height:calc(480px*(2/3));
+}
+
+#loginStatus{
+  color:#ffffff !important;
+}
+
+#klasCode{
+  color:#ffffff !important;
+}

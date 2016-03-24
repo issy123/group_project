@@ -1,6 +1,8 @@
 package controller;
 
+
 import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
@@ -41,12 +43,21 @@ class UserController implements Handler {
 		
 		String gebruikersnaam = jsonObjIn.getString("username");					// Uitlezen van opgestuurde inloggegevens... 
 		String wachtwoord = jsonObjIn.getString("wachtwoord");
+		String klas = jsonObjIn.getString("klas");
 		
 		String rol = informatieSysteem.login(gebruikersnaam, wachtwoord);			// inloggen methode aanroepen op domeinmodel...
 		
-		JsonObjectBuilder job = Json.createObjectBuilder().add("rol", rol);			// en teruggekregen gebruikersrol als JSON-object...
+		if(rol.equals("student")){
+			klas = informatieSysteem.getStudent(gebruikersnaam).getMijnKlas().getKlasCode();
+		}
+		
+		String jsonIn = Json.createObjectBuilder().add("klas", klas).add("rol", rol).build().toString();
+		
+		conversation.sendJSONMessage(jsonIn);
+		/*JsonObjectBuilder job = Json.createObjectBuilder().add("rol", rol);// en teruggekregen gebruikersrol als JSON-object...	
 		String jsonOut = job.build().toString();
 		
-		conversation.sendJSONMessage(jsonOut);										// terugsturen naar de Polymer-GUI!
+		conversation.sendJSONMessage(jsonOut);								// terugsturen naar de Polymer-GUI!*/
+		
 	}
 }

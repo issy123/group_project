@@ -1,8 +1,15 @@
 package controller;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
+import model.Docent;
+import model.Klas;
 import model.PrIS;
+import model.Student;
+import model.Vak;
 import server.JSONFileServer;
 
 public class Application {
@@ -23,12 +30,39 @@ public class Application {
 	 * 
 	 * Als je alle URLs hebt geregistreerd kun je de server starten en de applicatie in de
 	 * browser opvragen! Zie ook de controller-klassen voor een voorbeeld!
+	 * @throws SQLException 
 	 * 
 	 */
-	public static void main(String[] args) {
-		JSONFileServer server = new JSONFileServer(new File("webapp/app"), 8888);
+	public static void main(String[] args) throws SQLException {
 		
+		//tests
 		PrIS infoSysteem = new PrIS();
+		Docent testD = new Docent("testd", "testd");
+		infoSysteem.voegDocentToe(testD);
+		Vak aui = new Vak("AUI", "Analysis & User Interfacing");
+		testD.voegVakToe(aui);
+		aui.voegDocentToe(testD);
+		Klas testKlas = new Klas("TestKlas");
+		Student test = new Student(101769, "Ulysses", "Moore",testKlas, "test","test");
+		infoSysteem.voegStudentToe(test);
+		Student test2 = new Student(101770, "Harry", "Potter", testKlas, "test2","test");
+		infoSysteem.voegStudentToe(test2);
+		testKlas.voegStudentAanKlasToe(test);
+		testKlas.voegStudentAanKlasToe(test2);
+		
+		/*database-connectie
+		try{
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sportschool","root","");
+			System.out.println("Database Connected!");
+		}
+		catch(SQLException sqle)
+		{
+			System.out.println("Er is iets foutgegaan");
+			sqle.printStackTrace();
+		}*/
+		
+		//effectieve code
+		JSONFileServer server = new JSONFileServer(new File("webapp/app"), 8888);
 		
 		UserController userController = new UserController(infoSysteem);
 		DocentController docentController = new DocentController(infoSysteem);
