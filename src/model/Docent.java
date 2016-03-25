@@ -3,12 +3,15 @@ package model;
 import java.util.ArrayList;
 
 public class Docent {
+	private String naam;
 	private String gebruikersNaam;
 	private String wachtwoord;
 	private ArrayList<Vak> vakken = new ArrayList<>();
+	private ArrayList<Klas> klassen = new ArrayList<>();
 	
-	public Docent(String gN, String ww)
+	public Docent(String nm, String gN, String ww)
 	{
+		setNaam(nm);
 		setGebruikersNaam(gN);
 		setWachtwoord(ww);
 	}
@@ -40,6 +43,14 @@ public class Docent {
 
 	public void setVakken(ArrayList<Vak> vakken) {
 		this.vakken = vakken;
+	}
+
+	public String getNaam() {
+		return naam;
+	}
+
+	public void setNaam(String naam) {
+		this.naam = naam;
 	}
 
 }

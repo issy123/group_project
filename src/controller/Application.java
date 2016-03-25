@@ -20,6 +20,7 @@ import server.JSONFileServer;
 
 public class Application {
 	private ArrayList<Klas> klassenLijst = new ArrayList<>();
+	private ArrayList<Docent> docentenLijst = new ArrayList<>();
 	/**
 	 * Deze klasse is het startpunt voor de applicatie. Hierin maak je een server 
 	 * op een bepaalde poort (bijv. 8888). Daarna is er een PrIS-object gemaakt. Dit
@@ -45,17 +46,16 @@ public class Application {
 		
 		//tests
 		PrIS infoSysteem = new PrIS();
-		Docent testD = new Docent("testd", "testd");
-		infoSysteem.voegDocentToe(testD);
-		Vak aui = new Vak("AUI", "Analysis & User Interfacing");
-		testD.voegVakToe(aui);
-		aui.voegDocentToe(testD);
+		Vak aui = new Vak("TCIF-V1AUI-15", "Analysis & User Interfacing");
+		Vak ooc = new Vak("TICT-V1OODC-15", "Object Oriented Construction");
+		Vak gp = new Vak("TICT-V1GP-15", "Group Project");
 		leesKlasIn(infoSysteem, "src/resource/SIE_V1A.csv");
 		leesKlasIn(infoSysteem, "src/resource/SIE_V1B.csv");
 		leesKlasIn(infoSysteem, "src/resource/SIE_V1C.csv");
 		leesKlasIn(infoSysteem, "src/resource/SIE_V1D.csv");
 		leesKlasIn(infoSysteem, "src/resource/SIE_V1E.csv");
 		leesKlasIn(infoSysteem, "src/resource/SIE_V1F.csv");
+		leesDocentenIn(aui, ooc, gp, infoSysteem, "src/resource/Docenten.csv");
 		
 		/*database-connectie
 		try{
@@ -93,7 +93,6 @@ public class Application {
 			while((line = br.readLine()) != null){
 				String[] l = line.split(delimiter);
 				Student s = new Student(Integer.parseInt(l[0]), l[3], l[2] + " " + l[1], k, l[0], "test");
-				System.out.println(s);
 				pr.voegStudentToe(s);
 				k.voegStudentAanKlasToe(s);
 			}
@@ -104,6 +103,40 @@ public class Application {
 		finally{
 			br.close();
 		}
-		
+	}
+	
+	private static void leesDocentenIn(Vak a, Vak o, Vak g, PrIS pr, String file) throws IOException
+	{
+		BufferedReader br = null;
+		String line = "";
+		final String delimiter = ",";
+		try{
+			br = new BufferedReader(new FileReader(file));
+			while((line = br.readLine()) != null)
+			{
+				String[] l = line.split(delimiter);
+				Docent d = new Docent(l[0],l[2],"test");
+				if(a.getVakCode().equals(l[1]))
+				{
+					d.voegVakToe(a);
+					a.voegDocentToe(d);
+				}
+				else if(o.getVakCode().equals(l[1]))
+				{
+					d.voegVakToe(o);
+					o.voegDocentToe(d);
+				}
+				else if(g.getVakCode().equals(l[1]))
+				{
+					d.voegVakToe(g);
+					g.voegDocentToe(d);
+				}
+				pr.voegDocentToe(d);
+			}
+		}
+		catch(IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
 	}
 }
