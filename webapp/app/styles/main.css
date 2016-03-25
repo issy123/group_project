@@ -130,3 +130,7 @@ iframe{
 #klasCode{
   color:#ffffff !important;
 }
+
+table{
+  border-spacing:5px;
+}

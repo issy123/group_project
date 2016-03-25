@@ -9,7 +9,8 @@ public class Student {
 	private String achterNaam;
 	private int studentNummer;
 	private String gebruikersNaam;
-	private String wachtwoord; 
+	private String wachtwoord;
+	private boolean isZiek;
 	
 	public Student(int sN, String vN, String aN, Klas k, String gN, String ww)
 	{
@@ -19,6 +20,7 @@ public class Student {
 		mijnKlas = k;
 		gebruikersNaam = gN;
 		wachtwoord = ww;
+		isZiek = false;
 	}
 	
 	public Klas getMijnKlas() {
@@ -69,4 +71,15 @@ public class Student {
 		this.voorNaam = voorNaam;
 	}
 
+	public boolean isZiek() {
+		return isZiek;
+	}
+
+	public void setZiek(boolean isZiek) {
+		this.isZiek = isZiek;
+	}
+	
+	public String toString(){
+		return studentNummer + " " + voorNaam + " " + achterNaam; 
+	}
 }

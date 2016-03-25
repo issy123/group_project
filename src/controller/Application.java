@@ -1,9 +1,15 @@
 package controller;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 import model.Docent;
 import model.Klas;
@@ -13,6 +19,7 @@ import model.Vak;
 import server.JSONFileServer;
 
 public class Application {
+	private ArrayList<Klas> klassenLijst = new ArrayList<>();
 	/**
 	 * Deze klasse is het startpunt voor de applicatie. Hierin maak je een server 
 	 * op een bepaalde poort (bijv. 8888). Daarna is er een PrIS-object gemaakt. Dit
@@ -31,9 +38,10 @@ public class Application {
 	 * Als je alle URLs hebt geregistreerd kun je de server starten en de applicatie in de
 	 * browser opvragen! Zie ook de controller-klassen voor een voorbeeld!
 	 * @throws SQLException 
+	 * @throws IOException 
 	 * 
 	 */
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) throws SQLException, IOException {
 		
 		//tests
 		PrIS infoSysteem = new PrIS();
@@ -42,13 +50,12 @@ public class Application {
 		Vak aui = new Vak("AUI", "Analysis & User Interfacing");
 		testD.voegVakToe(aui);
 		aui.voegDocentToe(testD);
-		Klas testKlas = new Klas("TestKlas");
-		Student test = new Student(101769, "Ulysses", "Moore",testKlas, "test","test");
-		infoSysteem.voegStudentToe(test);
-		Student test2 = new Student(101770, "Harry", "Potter", testKlas, "test2","test");
-		infoSysteem.voegStudentToe(test2);
-		testKlas.voegStudentAanKlasToe(test);
-		testKlas.voegStudentAanKlasToe(test2);
+		leesKlasIn(infoSysteem, "src/resource/SIE_V1A.csv");
+		leesKlasIn(infoSysteem, "src/resource/SIE_V1B.csv");
+		leesKlasIn(infoSysteem, "src/resource/SIE_V1C.csv");
+		leesKlasIn(infoSysteem, "src/resource/SIE_V1D.csv");
+		leesKlasIn(infoSysteem, "src/resource/SIE_V1E.csv");
+		leesKlasIn(infoSysteem, "src/resource/SIE_V1F.csv");
 		
 		/*database-connectie
 		try{
@@ -73,5 +80,30 @@ public class Application {
 		server.registerHandler("/student/mijnmedestudenten", studentController);
 		
 		server.start();
+	}
+
+	private static void leesKlasIn(PrIS pr, String file) throws IOException {
+		BufferedReader br = null;
+		String klas = file.substring(13,20);
+		Klas k = new Klas(klas);
+		String line = "";
+		final String delimiter = ",";
+		try{
+			br = new BufferedReader(new FileReader(file));
+			while((line = br.readLine()) != null){
+				String[] l = line.split(delimiter);
+				Student s = new Student(Integer.parseInt(l[0]), l[3], l[2] + " " + l[1], k, l[0], "test");
+				System.out.println(s);
+				pr.voegStudentToe(s);
+				k.voegStudentAanKlasToe(s);
+			}
+		}
+		catch(IOException ioe){
+			ioe.printStackTrace();
+		}
+		finally{
+			br.close();
+		}
+		
 	}
 }
