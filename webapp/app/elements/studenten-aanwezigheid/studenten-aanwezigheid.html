@@ -1,0 +1,152 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="studenten-aanwezigheid">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      span {
+        @apply(--paper-font-body1);
+      }
+    </style>
+
+    <h1 class="page-title">Aanwezigheid registreren</h1>
+    <form class="studentenlijst" hidden="{{!les}}">
+        <table>
+          <tr>
+            <th>Aanwezig</th>
+            <th>Studentnummer</th>
+            <th>Voornaam</th>
+            <th>Achternaam</th>
+          </tr>
+          <template is="dom-repeat" items="{{studenten}}">
+            <tr>
+              <td><paper-checkbox checked="{{item.checked}}"></paper-checkbox></td>
+              <td>{{item.studentnummer}}</td>
+              <td>{{item.voornaam}}</td>
+              <td>{{item.achternaam}}</td>
+            </tr>
+          </template>
+        </table>
+        <paper-button on-click="absentieHandler">Verzenden</paper-button>
+    </form>
+    
+    <table hidden="{{les}}">
+        <thead>
+            <tr>
+                <th>Les</th>
+                <th>Begintijd</th>
+                <th>Eindtijd</th>
+                <th>Lokaal</th>
+                <th>Klas</th>
+            </tr>
+        </thead>
+        <tbody>
+        <template is="dom-repeat" items="{{lessen}}">
+            <tr>
+              <td><a href="#" on-click="studentenlijstOphalen">Absentie</a></td>
+              <td>{{item.vaknaam}}</td>
+              <td>{{item.begindatum}}</td>
+              <td>{{item.einddatum}}</td>
+              <td>{{item.lokaal}}</td>
+              <td>{{item.klas}}</td>
+            </tr>
+          </template>
+        </tbody>
+    </table>
+
+
+    <iron-ajax
+        id="studentenOphalen"
+        method="POST"
+        url="/student/vanklas"
+        handle-as="json"
+        on-response="responseHandler">
+    </iron-ajax>
+    <iron-ajax
+        id="lessenOphalen"
+        method="POST"
+        url="/rooster/lessen"
+        handle-as="json"
+        on-response="lessenResponseHandler"
+    >
+    </iron-ajax>
+    <iron-ajax
+        id="absentiesMelden"
+        method="POST"
+        url="/rooster/absenties"
+        handle-as="json"
+        on-response="absentiesResponseHandler"
+    >
+    </iron-ajax>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'studenten-aanwezigheid',
+
+        properties: {
+          username: String,
+          rol: {
+            observer: 'fetch'
+          },
+          les: {
+              type: String,
+              value: ""
+          }
+        },
+
+        responseHandler: function(request) {
+          console.log(request.detail.response);
+          this.studenten = request.detail.response;
+        },
+        
+        lessenResponseHandler:function(request){
+            this.lessen = request.detail.response;
+        },
+        
+        absentieHandler:function(){
+            
+        },
+        
+        studentenlijstOphalen:function(e){
+            
+            this.$.studentenOphalen.contentType="application/json";
+            this.$.studentenOphalen.body={
+              "klas":e.model.item.klas.replace("-","_")
+            };
+            this.$.studentenOphalen.generateRequest();
+            
+            this.les = e.model.item.vaknaam;
+            e.preventDefault();
+            return false;
+        },
+
+        fetch: function() {
+            var that = this;
+            window.globals.loggedIn = function(){
+                that.$.lessenOphalen.contentType="application/json";
+                that.$.lessenOphalen.body={
+                  "naam":window.globals.loginGegevens.naam,
+                  "datum":"02/02/2016"
+                };
+                that.$.lessenOphalen.generateRequest();
+            }
+        }
+
+      });
+    })();
+  </script>
+</dom-module>

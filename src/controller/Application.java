@@ -11,9 +11,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.json.Json;
+
 import model.Docent;
 import model.Klas;
+import model.Les;
 import model.PrIS;
+import model.RoosterElement;
 import model.Student;
 import model.Vak;
 import server.JSONFileServer;
@@ -21,6 +25,7 @@ import server.JSONFileServer;
 public class Application {
 	private ArrayList<Klas> klassenLijst = new ArrayList<>();
 	private ArrayList<Docent> docentenLijst = new ArrayList<>();
+	private static ArrayList<RoosterElement> roosterElementLijst = new ArrayList<>();
 	/**
 	 * Deze klasse is het startpunt voor de applicatie. Hierin maak je een server 
 	 * op een bepaalde poort (bijv. 8888). Daarna is er een PrIS-object gemaakt. Dit
@@ -56,6 +61,15 @@ public class Application {
 		leesKlasIn(infoSysteem, "src/resource/SIE_V1E.csv");
 		leesKlasIn(infoSysteem, "src/resource/SIE_V1F.csv");
 		leesDocentenIn(aui, ooc, gp, infoSysteem, "src/resource/Docenten.csv");
+		leesRoosterIn(infoSysteem, "src/resource/rooster_C.csv");
+		
+		/*
+		 * {
+		 *    "2016-03-31":{
+		 *       "Carl van heezik": [{naam:"vak1",begintijd:"16:30",eindtijd:"18:00"}]
+		 *    }
+		 * }
+		 */
 		
 		/*database-connectie
 		try{
@@ -74,10 +88,14 @@ public class Application {
 		UserController userController = new UserController(infoSysteem);
 		DocentController docentController = new DocentController(infoSysteem);
 		StudentController studentController = new StudentController(infoSysteem);
+		RoosterController roosterController = new RoosterController(infoSysteem);
 		
 		server.registerHandler("/login", userController);
 		server.registerHandler("/docent/mijnvakken", docentController);
+		server.registerHandler("/rooster/lessen", roosterController);
 		server.registerHandler("/student/mijnmedestudenten", studentController);
+		server.registerHandler("/student/vanklas", studentController);
+		server.registerHandler("/student", studentController);
 		
 		server.start();
 	}
@@ -133,6 +151,47 @@ public class Application {
 				}
 				pr.voegDocentToe(d);
 			}
+		}
+		catch(IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
+	}
+	private static void leesRoosterIn(PrIS pr, String file) throws IOException
+	{
+		BufferedReader br = null;
+		String line = "";
+		final String delimiter = ",";
+		try{
+			br = new BufferedReader(new FileReader(file));
+			while((line = br.readLine()) != null)
+			{
+				String[] l = line.split(delimiter);
+				Boolean bestaatNiet = true;
+				//voeg les toe aan bestaande rooster element indien het al bestaat
+				for (RoosterElement roosterElement : roosterElementLijst) {
+					if(roosterElement.getDatum() == l[0]){
+						String docentNaam = l[4];
+						Les les = new Les(l[3],l[1],l[2],l[5],l[6]);
+						roosterElement.voegLesToe(docentNaam, les);
+						bestaatNiet = false;
+						break;
+					}
+				}
+				
+				//maak nieuwe roosterElement
+				if(bestaatNiet){
+					RoosterElement roosterElement = new RoosterElement(l[0]);
+					String docentNaam = l[4];
+					Les les = new Les(l[3],l[1],l[2],l[5],l[6]);
+					roosterElement.voegLesToe(docentNaam, les);
+					roosterElementLijst.add(roosterElement);
+				}
+			}
+			for (RoosterElement roosterElement : roosterElementLijst) {
+				pr.voegRoosterElementToe(roosterElement);
+			}
+			
 		}
 		catch(IOException ioe)
 		{
