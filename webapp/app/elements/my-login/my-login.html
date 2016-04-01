@@ -119,6 +119,8 @@
 
         handleLogin: function(request) {
           this.waarde = request.detail.response;
+          window.globals.loginGegevens = this.waarde;
+          window.globals.loggedIn();
           this.rol=this.waarde.rol;
           console.log("username="+this.username+" | rol="+this.waarde);
 

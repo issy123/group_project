@@ -46,7 +46,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <!-- build:css styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
   <!-- endbuild-->
-
+  <script>
+      window.globals = {};
+  </script>
   <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
   <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <!-- endbuild -->
@@ -112,6 +114,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-icon icon="social:group"></iron-icon>
             <span>Toon medestudenten</span>
           </a>
+            
+          <a data-route="aanwezigheidregistreren" href="{{baseUrl}}aanwezigheid" hidden="{{!roldocent}}">
+            <iron-icon icon="social:group"></iron-icon>
+            <span>Aanwezigheid registreren</span>
+          </a>
 
           <a onclick="{{logOut}}" data-route="uitloggen" hidden="{{!loggedin}}">
             <iron-icon icon="account-box"></iron-icon>
@@ -175,6 +182,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <section data-route="toonmedestudenten">
               <paper-material elevation="1">
                 <my-medestudenten rol="[[rol]]" username="[[username]]"></my-medestudenten>
+              </paper-material>
+            </section>
+              
+            <section data-route="aanwezigheidregistreren">
+              <paper-material elevation="1">
+                <studenten-aanwezigheid rol="[[rol]]" username="[[username]]"></studenten-aanwezigheid>
               </paper-material>
             </section>
 

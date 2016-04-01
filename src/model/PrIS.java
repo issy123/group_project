@@ -6,6 +6,7 @@ import java.util.HashMap;
 public class PrIS {
 	private HashMap<String,Docent> mijnDocenten = new HashMap<>();
 	private HashMap<String,Student> mijnStudenten = new HashMap<>();
+	private HashMap<String,RoosterElement> mijnRoosterElementen = new HashMap<>();
 	
 	public void voegStudentToe(Student s)
 	{
@@ -15,6 +16,10 @@ public class PrIS {
 	public void voegDocentToe(Docent d)
 	{
 		mijnDocenten.put(d.getGebruikersNaam(), d);
+	}
+	
+	public void voegRoosterElementToe(RoosterElement roosterElement){
+		mijnRoosterElementen.put(roosterElement.getDatum(),roosterElement);
 	}
 
 	public String login(String gebruikersnaam, String wachtwoord) {
@@ -34,6 +39,19 @@ public class PrIS {
 			}
 		}
 		return rol;
+	}
+	
+	public ArrayList<Les> getLessen(String datum, String docentNaam){
+		Docent d = null;
+		for(HashMap.Entry<String,RoosterElement> entry : mijnRoosterElementen.entrySet())
+		{
+			if(entry.getKey().equals(datum))
+			{
+				return entry.getValue().getLessen(docentNaam);
+			}
+		}
+		
+		return null;
 	}
 
 	public Docent getDocent(String gebruikersnaam) {

@@ -1,12 +1,16 @@
 package controller;
 
 
+import java.util.ArrayList;
+
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 
 import model.PrIS;
+import model.Vak;
 import server.Conversation;
 import server.Handler;
 
@@ -44,14 +48,29 @@ class UserController implements Handler {
 		String gebruikersnaam = jsonObjIn.getString("username");					// Uitlezen van opgestuurde inloggegevens... 
 		String wachtwoord = jsonObjIn.getString("wachtwoord");
 		String klas = jsonObjIn.getString("klas");
+		String naam;
 		
 		String rol = informatieSysteem.login(gebruikersnaam, wachtwoord);			// inloggen methode aanroepen op domeinmodel...
 		
+		JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+		objectBuilder.add("rol", rol);
 		if(rol.equals("student")){
 			klas = informatieSysteem.getStudent(gebruikersnaam).getMijnKlas().getKlasCode();
+			naam = informatieSysteem.getStudent(gebruikersnaam).getVoorNaam() + " " + informatieSysteem.getStudent(gebruikersnaam).getAchterNaam();
+			objectBuilder.add("klas", klas);
+		}else{
+			naam = informatieSysteem.getDocent(gebruikersnaam).getNaam();
+			JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+			ArrayList<Vak> vakken = informatieSysteem.getDocent(gebruikersnaam).getVakken();
+	        for (Vak vak : vakken) {
+	            arrayBuilder.add(vak.getVakCode());
+	        }
+			objectBuilder.add("vakken", arrayBuilder);
 		}
 		
-		String jsonIn = Json.createObjectBuilder().add("klas", klas).add("rol", rol).build().toString();
+		objectBuilder.add("naam", naam);
+		
+		String jsonIn = objectBuilder.build().toString();
 		
 		conversation.sendJSONMessage(jsonIn);
 		/*JsonObjectBuilder job = Json.createObjectBuilder().add("rol", rol);// en teruggekregen gebruikersrol als JSON-object...	

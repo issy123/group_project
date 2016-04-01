@@ -31,8 +31,11 @@ public class StudentController implements Handler {
 		if (conversation.getRequestedURI().startsWith("/student/mijnmedestudenten")) {
 			mijnMedestudenten(conversation);
 		}
-		if(conversation.getRequestedURI().startsWith("/student/toonziekmelden")){
+		if(conversation.getRequestedURI().startsWith("/student/toonziekmelden")) {
 			meldZiek(conversation);
+		}
+		if (conversation.getRequestedURI().startsWith("/student/vanklas")) {
+			studentenVanKlas(conversation);
 		}
 	}
 
@@ -83,7 +86,22 @@ public class StudentController implements Handler {
 		conversation.sendJSONMessage(Json.createObjectBuilder().add("ziek", student.isZiek()).build().toString());
 	}
 
+	
+	private void studentenVanKlas(Conversation conversation){
+		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		String klasCode = jsonObjectIn.getString("klas");
+		ArrayList<Student> studentenVanKlas = informatieSysteem.getStudentenVanKlas(klasCode);	// medestudenten opzoeken
+		
+		JsonArrayBuilder jab = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...
 
-
+		for (Student s : studentenVanKlas) {									// met daarin voor elke medestudent een JSON-object... 
+				jab.add(Json.createObjectBuilder()
+						.add("studentnummer", s.getStudentNummer())
+						.add("voornaam", s.getVoorNaam())
+						.add("achternaam", s.getAchterNaam()));
+		}
+		
+		conversation.sendJSONMessage(jab.build().toString());	
+	}
 }
 
