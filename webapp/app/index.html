@@ -103,6 +103,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span>Toon vakken</span>
           </a>
 
+          <a data-route="toonziekmelden" href="{{baseUrl}}ziek" hidden="{{!rolstudent}}">
+            <iron-icon icon="loyalty"></iron-icon>
+            <span>Ziek melden</span>
+          </a>
+
           <a data-route="toonmedestudenten" href="{{baseUrl}}users" hidden="{{!rolstudent}}">
             <iron-icon icon="social:group"></iron-icon>
             <span>Toon medestudenten</span>
@@ -170,6 +175,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <section data-route="toonmedestudenten">
               <paper-material elevation="1">
                 <my-medestudenten rol="[[rol]]" username="[[username]]"></my-medestudenten>
+              </paper-material>
+            </section>
+
+            <section data-route="toonziekmelden">
+              <paper-material elevation="1">
+                <my-ziek rol="[[rol]]" username="[[username]]"></my-ziek>
               </paper-material>
             </section>
 

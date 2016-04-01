@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.FileReader;
 import java.util.ArrayList;
 
 import javax.json.Json;
@@ -30,6 +31,9 @@ public class StudentController implements Handler {
 		if (conversation.getRequestedURI().startsWith("/student/mijnmedestudenten")) {
 			mijnMedestudenten(conversation);
 		}
+		if(conversation.getRequestedURI().startsWith("/student/toonziekmelden")){
+			meldZiek(conversation);
+		}
 	}
 
 	/**
@@ -49,7 +53,7 @@ public class StudentController implements Handler {
 		
 		JsonArrayBuilder jab = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...
 
-		for (Student s : studentenVanKlas) {									// met daarin voor elke medestudent een JSON-object... 
+		for (Student s : studentenVanKlas) {									// met daarin voor elke medestudent een JSON-object...
 			if (s.getGebruikersNaam().equals(gebruikersnaam)) 					// behalve de student zelf...
 				continue;
 			else {
@@ -59,8 +63,27 @@ public class StudentController implements Handler {
 						.add("achternaam", s.getAchterNaam()));
 			}
 		}
-		
+
 		conversation.sendJSONMessage(jab.build().toString());					// terug naar de Polymer-GUI!
 	}
+
+	public void meldZiek(Conversation conversation) {
+		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		String gebruikersnaam = jsonObjectIn.getString("username");
+
+
+		Student student = informatieSysteem.getStudent(gebruikersnaam);
+
+		if (!student.isZiek()){
+			student.setZiek(true);
+		} else {
+			student.setZiek(false);
+		}
+
+		conversation.sendJSONMessage(Json.createObjectBuilder().add("ziek", student.isZiek()).build().toString());
+	}
+
+
+
 }
 

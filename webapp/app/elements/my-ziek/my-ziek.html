@@ -1,0 +1,77 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="my-ziek">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      span {
+        @apply(--paper-font-body1);
+      }
+    </style>
+
+    <h1 class="page-title">Ziek melden</h1>
+    <p>Op deze pagina kunt u zichzelf ziek melden. Klik op de onderstaande knop om dit te doen.<br>De docent krijgt automatisch bericht van uw afmelding.</p>
+
+    <paper-button raised on-click="ziekHandler" id="ziekButton">Meld ziek</paper-button><i><p id="status"></p></i>
+
+    <iron-ajax
+      id="ajax"
+      method="POST"
+      url="/student/toonziekmelden"
+      handle-as="json"
+      on-response="responseHandler">
+    </iron-ajax>
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+    is: 'my-ziek',
+
+    properties: {
+      username: String,
+    },
+
+    responseHandler: function(request) {
+      console.log(request.detail.response);
+      this.ziek = request.detail.response;
+      console.log(this.ziek.ziek);
+      if(this.ziek.ziek){
+        document.getElementById("ziekButton").innerHTML = "Meld beter";
+        document.getElementById("status").innerHTML = "U bent ziek gemeld!";
+      }
+      else{
+        document.getElementById("ziekButton").innerHTML = "Meld ziek";
+        document.getElementById("status").innerHTML = "U heeft zich weer beter gemeld!";
+      }
+    },
+
+    ziekHandler: function() {
+      if(this.username=="")
+      {
+        page.redirect(app.baseUrl);
+      }
+      console.log("ziekHandler user="+this.username);
+      if (this.rol == "student") {
+        this.$.ajax.contentType="application/json";
+        this.$.ajax.body={
+          "username":this.username
+        };
+        this.$.ajax.generateRequest();
+      }
+    }
+
+  });
+})();
+</script>
