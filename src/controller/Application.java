@@ -96,7 +96,7 @@ public class Application {
 		server.registerHandler("/student/mijnmedestudenten", studentController);
 		server.registerHandler("/student/toonziekmelden", studentController);
 		server.registerHandler("/student/vanklas", studentController);
-		server.registerHandler("/student", studentController)
+		server.registerHandler("/student", studentController);
 		
 		server.start();
 	}
