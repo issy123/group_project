@@ -92,11 +92,8 @@ public class Application {
 		
 		server.registerHandler("/login", userController);
 		server.registerHandler("/docent/mijnvakken", docentController);
-<<<<<<< HEAD
 		server.registerHandler("/rooster/lessen", roosterController);
-=======
 		server.registerHandler("/docent/mijnrapport", docentController);
->>>>>>> Grafiek_op_basis_van_rapport
 		server.registerHandler("/student/mijnmedestudenten", studentController);
 		server.registerHandler("/student/toonziekmelden", studentController);
 		server.registerHandler("/student/vanklas", studentController);
