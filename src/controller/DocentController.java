@@ -1,5 +1,8 @@
 package controller;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.json.Json;
@@ -31,8 +34,48 @@ public class DocentController implements Handler {
 		if (conversation.getRequestedURI().startsWith("/docent/mijnvakken")) {
 			mijnVakken(conversation);
 		}
+		if (conversation.getRequestedURI().startsWith("/docent/mijnrapport")){
+			try {
+				mijnAanwezigheid(conversation);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
+	public void mijnAanwezigheid(Conversation conversation) throws IOException {
+		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		String gebruikersnaam = jsonObjectIn.getString("username");
+		
+		Docent d = informatieSysteem.getDocent(gebruikersnaam);
+		String vakCode = d.getVakken().get(0).getVakCode();
+		
+		JsonArrayBuilder jab = Json.createArrayBuilder();
+		
+		String line = "";
+		final String delimiter = ",";
+		try{
+			BufferedReader br = new BufferedReader(new FileReader("src/resource/test_grafiek.csv"));
+			while((line = br.readLine()) != null){
+				String[] l = line.split(delimiter);
+				if(l[0].equals(vakCode)){
+					jab.add(Json.createObjectBuilder()
+							.add("lesnummer", l[2])
+							.add("aantalaanwezig", l[3])
+							.add("aantalafwezig",l[4])
+							.add("klascode", l[1])
+					);
+				}
+			}
+		}
+		catch(IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
+		
+		conversation.sendJSONMessage(jab.build().toString());
+	}
+
 	/**
 	 * Deze methode haalt eerst de opgestuurde JSON-data op. Daarna worden
 	 * de benodigde gegevens uit het domeinmodel gehaald. Deze gegevens worden
@@ -40,7 +83,7 @@ public class DocentController implements Handler {
 	 * 
 	 * @param conversation - alle informatie over het request
 	 */
-	private void mijnVakken(Conversation conversation) {
+	public void mijnVakken(Conversation conversation) {
 		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String gebruikersnaam = jsonObjectIn.getString("username");
 		

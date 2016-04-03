@@ -38,7 +38,7 @@
         </table>
         <paper-button on-click="absentieHandler">Verzenden</paper-button>
     </form>
-    
+
     <table hidden="{{les}}">
         <thead>
             <tr>
@@ -112,23 +112,23 @@
           console.log(request.detail.response);
           this.studenten = request.detail.response;
         },
-        
+
         lessenResponseHandler:function(request){
             this.lessen = request.detail.response;
         },
-        
+
         absentieHandler:function(){
-            
+
         },
-        
+
         studentenlijstOphalen:function(e){
-            
+
             this.$.studentenOphalen.contentType="application/json";
             this.$.studentenOphalen.body={
               "klas":e.model.item.klas.replace("-","_")
             };
             this.$.studentenOphalen.generateRequest();
-            
+
             this.les = e.model.item.vaknaam;
             e.preventDefault();
             return false;

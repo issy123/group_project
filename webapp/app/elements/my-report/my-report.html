@@ -1,0 +1,107 @@
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="
+import" href="../../bower_components/google-chart/google-chart.html">
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<dom-module id="my-report">
+  <template items="{{aanwezigheid}}">
+    <style>
+      :host {
+        display: block;
+      }
+
+      span {
+        @apply(--paper-font-body1);
+      }
+    </style>
+    <h1>Aanwezigheid {{klas}}</h1>
+    <div id="curve_chart"></div>
+    <script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    </script>
+    <table>
+    <tr>
+      <th>Lesnummer</th>
+      <th>Aantal Aanwezig</th>
+      <th>Aantal Afwezig</th>
+    </tr>
+    <template is="dom-repeat" items="{{aanwezigheid}}">
+      <tr>
+        <td>{{item.lesnummer}}</td>
+        <td>{{item.aantalaanwezig}}</td>
+        <td>{{item.aantalafwezig}}</td>
+      </tr>
+    </template>
+  </table>
+
+      <iron-ajax
+        id="ajax"
+        method="POST"
+    		url="/docent/mijnrapport"
+        handle-as="json"
+    		on-response="responseHandler">
+      </iron-ajax>
+  </template>
+
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'my-report',
+
+        properties: {
+          username: String,
+          rol:{
+            observer:'fetchGegevens'
+          }
+        },
+
+        responseHandler: function(request) {
+          console.log(request.detail.response);
+          this.aanwezigheid = request.detail.response;
+          this.klas = this.aanwezigheid[0].klascode;
+          this.aanwezigen = [['Les','Aanwezigen','Afwezigen']];
+          for(var i=0;i<this.aanwezigheid.length;i++)
+          {
+            this.aanwezigen .push(['les ' + (i+1),Number(this.aanwezigheid[i].aantalaanwezig), Number(this.aanwezigheid[i].aantalafwezig)]);
+          }
+          console.log(this.aanwezigen);
+          var data = google.visualization.arrayToDataTable(this.aanwezigen);
+
+          var options = {
+            title: 'Grafiek aanwezigheid',
+            legend: { position: 'right' },
+            width: 800,
+            height: 400,
+            chartArea: {  width: "50%", height: "70%" }
+          };
+
+          var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+          chart.draw(data, options);
+        },
+
+        fetchGegevens: function(){
+          if(this.username=="")
+          {
+            page.redirect(app.baseUrl);
+          }
+
+          if (this.rol == "docent") {
+            console.log("FetchGegevens user="+this.username);
+            this.$.ajax.contentType="application/json";
+            this.$.ajax.body={
+              "username":this.username
+            };
+            this.$.ajax.generateRequest();
+          }
+        }
+
+      });
+    })();
+  </script>
+</dom-module>
