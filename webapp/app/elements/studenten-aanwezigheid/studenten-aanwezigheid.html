@@ -137,12 +137,14 @@
         fetch: function() {
             var that = this;
             window.globals.loggedIn = function(){
+              if(this.rol==="docent"){
                 that.$.lessenOphalen.contentType="application/json";
                 that.$.lessenOphalen.body={
                   "naam":window.globals.loginGegevens.naam,
                   "datum":"02/02/2016"
                 };
                 that.$.lessenOphalen.generateRequest();
+              }
             }
         }
 

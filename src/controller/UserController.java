@@ -58,7 +58,7 @@ class UserController implements Handler {
 			klas = informatieSysteem.getStudent(gebruikersnaam).getMijnKlas().getKlasCode();
 			naam = informatieSysteem.getStudent(gebruikersnaam).getVoorNaam() + " " + informatieSysteem.getStudent(gebruikersnaam).getAchterNaam();
 			objectBuilder.add("klas", klas);
-		}else{
+		}else if(rol.equals("docent")){
 			naam = informatieSysteem.getDocent(gebruikersnaam).getNaam();
 			JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 			ArrayList<Vak> vakken = informatieSysteem.getDocent(gebruikersnaam).getVakken();
@@ -66,6 +66,9 @@ class UserController implements Handler {
 	            arrayBuilder.add(vak.getVakCode());
 	        }
 			objectBuilder.add("vakken", arrayBuilder);
+		}
+		else{
+			naam = "";
 		}
 		
 		objectBuilder.add("naam", naam);

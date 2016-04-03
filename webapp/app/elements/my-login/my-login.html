@@ -126,7 +126,10 @@
 
           this.attributeChanged();
           this.password = "";
-          app.route='home';
+          if(this.rol==="student"||this.rol==="docent")
+          {
+            app.route='home';
+          }
         }
       });
     })();
