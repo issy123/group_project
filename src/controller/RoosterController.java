@@ -28,7 +28,6 @@ public class RoosterController implements Handler {
 		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String datum = jsonObjectIn.getString("datum");
 		String docentNaam = jsonObjectIn.getString("naam");
-		
 		ArrayList<Les> lessen = this.informatieSysteem.getLessen(datum,docentNaam);
 		
 		JsonArrayBuilder jab = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...

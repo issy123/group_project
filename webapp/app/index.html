@@ -114,7 +114,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-icon icon="social:group"></iron-icon>
             <span>Toon medestudenten</span>
           </a>
-            
+
           <a data-route="aanwezigheidregistreren" href="{{baseUrl}}aanwezigheid" hidden="{{!roldocent}}">
             <iron-icon icon="social:group"></iron-icon>
             <span>Aanwezigheid registreren</span>
@@ -188,10 +188,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <my-medestudenten rol="[[rol]]" username="[[username]]"></my-medestudenten>
               </paper-material>
             </section>
-              
+
             <section data-route="aanwezigheidregistreren">
               <paper-material elevation="1">
-                <studenten-aanwezigheid rol="[[rol]]" username="[[username]]"></studenten-aanwezigheid>
+                <studenten-aanwezigheid rol="[[rol]]" username="[[username]]" roldocent="{{roldocent}}"></studenten-aanwezigheid>
               </paper-material>
             </section>
 

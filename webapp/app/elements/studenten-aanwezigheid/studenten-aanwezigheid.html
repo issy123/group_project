@@ -39,7 +39,7 @@
         <paper-button on-click="absentieHandler">Verzenden</paper-button>
     </form>
 
-    <table hidden="{{les}}">
+    <table onload="onPageLoad" hidden="{{les}}">
         <thead>
             <tr>
                 <th>Les</th>
@@ -84,7 +84,7 @@
         method="POST"
         url="/rooster/absenties"
         handle-as="json"
-        on-response="absentiesResponseHandler"
+        on-response="absentieResponseHandler"
     >
     </iron-ajax>
 
@@ -100,12 +100,16 @@
         properties: {
           username: String,
           rol: {
-            observer: 'fetch'
+            observer:'fetch'
           },
           les: {
               type: String,
               value: ""
           }
+        },
+
+        onPageLoad: function(){
+            setTimeout(this.fetch(), 2000);
         },
 
         responseHandler: function(request) {
@@ -135,19 +139,19 @@
         },
 
         fetch: function() {
-            var that = this;
-            window.globals.loggedIn = function(){
-              if(this.rol==="docent"){
-                that.$.lessenOphalen.contentType="application/json";
-                that.$.lessenOphalen.body={
-                  "naam":window.globals.loginGegevens.naam,
-                  "datum":"02/02/2016"
-                };
-                that.$.lessenOphalen.generateRequest();
-              }
+          var that = this;
+          console.log("fetching");
+          window.globals.loggedIn = function(){
+            if(window.globals.loginGegevens.rol==="docent"){
+              that.$.lessenOphalen.contentType="application/json";
+              that.$.lessenOphalen.body={
+                "naam":window.globals.loginGegevens.naam,
+                "datum":"02/02/2016"
+              };
+              that.$.lessenOphalen.generateRequest();
             }
+          }
         }
-
       });
     })();
   </script>
