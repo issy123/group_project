@@ -67,6 +67,10 @@
           klas: {
             type: String,
             notify: true
+          },
+          docentnaam: {
+            type: String,
+            notify: true
           }
         },
 
@@ -96,7 +100,7 @@
             document.getElementById('klasCode').innerHTML="Klas: " + this.waarde.klas;
           };
 
-          console.log("loggedin="+this.loggedin+" | rol="+this.rol+"| roldocent="+this.roldocent+"| rolstudent="+this.rolstudent );
+          console.log("loggedin="+this.loggedin+" | rol="+this.rol+"| roldocent="+this.roldocent+"| rolstudent="+this.rolstudent);
         },
 
         loginHandler: function() {
@@ -119,8 +123,7 @@
 
         handleLogin: function(request) {
           this.waarde = request.detail.response;
-          window.globals.loginGegevens = this.waarde;
-          window.globals.loggedIn();
+          this.docentnaam = this.waarde.naam;
           this.rol=this.waarde.rol;
           console.log("username="+this.username+" | rol="+this.waarde);
 

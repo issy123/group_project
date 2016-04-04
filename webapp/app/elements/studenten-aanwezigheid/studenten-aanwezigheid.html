@@ -99,17 +99,14 @@
 
         properties: {
           username: String,
+          docentnaam: String,
           rol: {
             observer:'fetch'
           },
           les: {
               type: String,
               value: ""
-          }
-        },
-
-        onPageLoad: function(){
-            setTimeout(this.fetch(), 2000);
+          },
         },
 
         responseHandler: function(request) {
@@ -139,17 +136,14 @@
         },
 
         fetch: function() {
-          var that = this;
-          console.log("fetching");
-          window.globals.loggedIn = function(){
-            if(window.globals.loginGegevens.rol==="docent"){
-              that.$.lessenOphalen.contentType="application/json";
-              that.$.lessenOphalen.body={
-                "naam":window.globals.loginGegevens.naam,
+          console.log(this.docentnaam);
+            if(this.rol==="docent"){
+              this.$.lessenOphalen.contentType="application/json";
+              this.$.lessenOphalen.body={
+                "naam":this.docentnaam,
                 "datum":"02/02/2016"
               };
-              that.$.lessenOphalen.generateRequest();
-            }
+              this.$.lessenOphalen.generateRequest();
           }
         }
       });

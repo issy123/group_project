@@ -46,9 +46,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <!-- build:css styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
   <!-- endbuild-->
-  <script>
-      window.globals = {};
-  </script>
   <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
   <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <!-- endbuild -->
@@ -173,7 +170,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <section data-route="inloggen">
               <paper-material elevation="1">
-                <my-login username="{{username}}" rol="{{rol}}" loggedin="{{loggedin}}" roldocent="{{roldocent}}" rolstudent="{{rolstudent}}"></my-login>
+                <my-login username="{{username}}" rol="{{rol}}" loggedin="{{loggedin}}" roldocent="{{roldocent}}" rolstudent="{{rolstudent}}" docentnaam="{{docentnaam}}"></my-login>
               </paper-material>
             </section>
 
@@ -191,7 +188,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <section data-route="aanwezigheidregistreren">
               <paper-material elevation="1">
-                <studenten-aanwezigheid rol="[[rol]]" username="[[username]]" roldocent="{{roldocent}}"></studenten-aanwezigheid>
+                <studenten-aanwezigheid rol="[[rol]]" username="[[username]]" docentnaam="{{docentnaam}}"></studenten-aanwezigheid>
               </paper-material>
             </section>
 
