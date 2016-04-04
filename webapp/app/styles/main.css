@@ -142,3 +142,8 @@ table{
 text{
   z-index:150;
 }
+
+#checkbox.checked.paper-checkbox{
+  background-color:#006600!important;
+  border-color:#006600!important;
+}
