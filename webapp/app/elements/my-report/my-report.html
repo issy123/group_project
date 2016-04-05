@@ -1,8 +1,8 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="
-import" href="../../bower_components/google-chart/google-chart.html">
+<link rel="import" href="../../bower_components/google-chart/google-chart.html">
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <dom-module id="my-report">
@@ -16,7 +16,15 @@ import" href="../../bower_components/google-chart/google-chart.html">
         @apply(--paper-font-body1);
       }
     </style>
-    <h1>Aanwezigheid {{klas}}</h1>
+    <h1>Aanwezigheid</h1>
+    <h2>Kies een klas:</h2>
+    <paper-dropdown-menu label="Klas">
+      <paper-menu on-iron-select="itemSelected" class="dropdown-content">
+        <template is="dom-repeat" items="{{klas}}">
+          <paper-item value="{{item.naam}}" on-tap="itemSelected">{{item.naam}}</paper-item>
+        </template>
+      </paper-menu>
+    </paper-dropdown-menu>
     <div id="curve_chart"></div>
     <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart']});
@@ -63,11 +71,42 @@ import" href="../../bower_components/google-chart/google-chart.html">
         responseHandler: function(request) {
           console.log(request.detail.response);
           this.aanwezigheid = request.detail.response;
-          this.klas = this.aanwezigheid[0].klascode;
+          this.klas = [{"naam":"SIE_V1A"},{"naam":"SIE_V1B"},{"naam":"SIE_V1C"},{"naam":"SIE_V1D"},{"naam":"SIE_V1E"},{"naam":"SIE_V1F"}];
+          this.drawChart(this.klas[0].naam);
+        },
+
+        itemSelected:function(e){
+          var selectedItem = e.target.selectedItem;
           this.aanwezigen = [['Les','Aanwezigen','Afwezigen']];
           for(var i=0;i<this.aanwezigheid.length;i++)
           {
-            this.aanwezigen .push(['les ' + (i+1),Number(this.aanwezigheid[i].aantalaanwezig), Number(this.aanwezigheid[i].aantalafwezig)]);
+            if(this.aanwezigheid[i].klascode===selectedItem.innerText)
+            {
+              this.aanwezigen .push(['les ' + this.aanwezigheid[i].lesnummer,Number(this.aanwezigheid[i].aantalaanwezig), Number(this.aanwezigheid[i].aantalafwezig)]);
+            }
+          }
+          var data = google.visualization.arrayToDataTable(this.aanwezigen);
+
+          var options = {
+            title: 'Grafiek aanwezigheid',
+            legend: { position: 'right' },
+            width: 800,
+            height: 400,
+            chartArea: {  width: "50%", height: "70%" }
+          };
+
+          var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+          chart.draw(data, options);
+        },
+
+        drawChart:function(){
+          this.aanwezigen = [['Les','Aanwezigen','Afwezigen']];
+          for(var i=0;i<this.aanwezigheid.length;i++)
+          {
+            if(this.aanwezigheid[i].klascode==="SIE_V1A"){
+              this.aanwezigen .push(['les ' + (i+1),Number(this.aanwezigheid[i].aantalaanwezig), Number(this.aanwezigheid[i].aantalafwezig)]);
+            }
           }
           console.log(this.aanwezigen);
           var data = google.visualization.arrayToDataTable(this.aanwezigen);

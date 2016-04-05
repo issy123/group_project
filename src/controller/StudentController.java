@@ -66,7 +66,7 @@ public class StudentController implements Handler {
 						.add("achternaam", s.getAchterNaam()));
 			}
 		}
-
+		
 		conversation.sendJSONMessage(jab.build().toString());					// terug naar de Polymer-GUI!
 	}
 
