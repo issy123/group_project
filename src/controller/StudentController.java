@@ -1,7 +1,11 @@
 package controller;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
+import java.io.IOException;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -32,7 +36,12 @@ public class StudentController implements Handler {
 			mijnMedestudenten(conversation);
 		}
 		if(conversation.getRequestedURI().startsWith("/student/toonziekmelden")) {
-			meldZiek(conversation);
+			try {
+				meldZiek(conversation);
+			}
+			catch(IOException ioe){
+				ioe.printStackTrace();
+			}
 		}
 		if (conversation.getRequestedURI().startsWith("/student/vanklas")) {
 			studentenVanKlas(conversation);
@@ -70,7 +79,7 @@ public class StudentController implements Handler {
 		conversation.sendJSONMessage(jab.build().toString());					// terug naar de Polymer-GUI!
 	}
 
-	public void meldZiek(Conversation conversation) {
+	public void meldZiek(Conversation conversation) throws IOException {
 		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String gebruikersnaam = jsonObjectIn.getString("username");
 
@@ -82,6 +91,8 @@ public class StudentController implements Handler {
 		} else {
 			student.setZiek(false);
 		}
+
+		updateCSV(student);
 
 		conversation.sendJSONMessage(Json.createObjectBuilder().add("ziek", student.isZiek()).build().toString());
 	}
@@ -102,6 +113,47 @@ public class StudentController implements Handler {
 		}
 		
 		conversation.sendJSONMessage(jab.build().toString());	
+	}
+
+	public void updateCSV(Student st) throws IOException{
+		BufferedReader br = null;
+		String line = "";
+		final String delimiter = ";";
+		ArrayList<String> ar = new ArrayList<String>();
+		try {
+			br = new BufferedReader(new FileReader("src/resource/klassen.csv"));
+			while ((line = br.readLine()) != null) {
+				String[] l = line.split(delimiter);
+				ar.add(line);
+			}
+
+			for (int i = 0; i <  ar.size(); i++) {
+				String[] p = ar.get(i).split(delimiter);
+				if (Integer.parseInt(p[0]) == st.getStudentNummer()) {
+					if (st.isZiek()) {
+						p[5] = "TRUE";
+					} else {
+						p[5] = "FALSE";
+					}
+				}
+				ar.set(i, p[0] + ";" + p[1] + ";" +p[2] + ";" +p[3] + ";" +p[4] + ";" +p[5] );
+			}
+
+			BufferedWriter bw = new BufferedWriter(new FileWriter("src/resource/klassen.csv",false));
+			StringBuilder sb = new StringBuilder();
+			for(int i=0;i<ar.size();i++)
+			{
+				sb.append(ar.get(i) + "\n");
+			}
+
+			bw.write(sb.toString());
+			bw.close();
+
+		}
+
+		catch (IOException ioe){
+			ioe.printStackTrace();
+		}
 	}
 }
 
