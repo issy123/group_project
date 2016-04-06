@@ -176,7 +176,8 @@ public class Application {
 				Boolean bestaatNiet = true;
 				//voeg les toe aan bestaande rooster element indien het al bestaat
 				for (RoosterElement roosterElement : roosterElementLijst) {
-					if(roosterElement.getDatum() == l[0]){
+					String currentDatum = roosterElement.getDatum();
+					if(currentDatum.equals(l[0])){
 						String docentNaam = l[4];
 						Les les = new Les(l[3],l[1],l[2],l[5],l[6]);
 						roosterElement.voegLesToe(docentNaam, les);
