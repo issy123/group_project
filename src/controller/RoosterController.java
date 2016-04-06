@@ -24,7 +24,7 @@ public class RoosterController implements Handler {
 	public RoosterController(PrIS infoSys) {
 		informatieSysteem = infoSys;
 	}
-	
+
 	public void handle(Conversation conversation) {
 		if (conversation.getRequestedURI().startsWith("/rooster/lessen")) {
 			mijnLessen(conversation);
@@ -42,20 +42,20 @@ public class RoosterController implements Handler {
 			getRooster(conversation);
 		}
 	}
-	
+
 	public void mijnLessen(Conversation conversation){
 		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String datum = jsonObjectIn.getString("datum");
 		String docentNaam = jsonObjectIn.getString("naam");
 		ArrayList<Les> lessen = this.informatieSysteem.getLessen(datum,docentNaam);
-		
+
 		JsonArrayBuilder jab = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...
 		if(lessen == null){
 			conversation.sendJSONMessage(jab.build().toString());
 			return;
 		}
 
-		for (Les les : lessen) {									// met daarin voor elke medestudent een JSON-object... 
+		for (Les les : lessen) {									// met daarin voor elke medestudent een JSON-object...
 				jab.add(
 						Json.createObjectBuilder()
 						.add("vaknaam", les.getVaknaam())
@@ -65,11 +65,11 @@ public class RoosterController implements Handler {
 						.add("klas", les.getKlas())
 						);
 		}
-		
+
 		conversation.sendJSONMessage(jab.build().toString());
-		
+
 	}
-	
+
 	public void absentieDoen(Conversation conversation){
 		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String datum = jsonObjectIn.getString("datum");
@@ -79,20 +79,20 @@ public class RoosterController implements Handler {
 		String docentNaam = jsonObjectIn.getString("docentNaam");
 		JsonArray absenties = jsonObjectIn.getJsonArray("absenties");
 		String id = les+","+beginTijd+","+eindTijd+","+docentNaam;
-		
+
 		try
 		{
 			String filepath = "src/resource/absenties/"+datum+".csv";
-			
-			//legen 
+
+			//legen
 			File f = new File(filepath);
 			if (f.exists())
 			{
 			  //delete if exists
 			   f.delete();
 			}
-			
-			FileWriter writer;			
+
+			FileWriter writer;
 
 			writer = new FileWriter(filepath);
 		    for (int i = 0 ; i < absenties.size(); i++) {
@@ -100,27 +100,27 @@ public class RoosterController implements Handler {
 		        String naam = ""+obj.getInt("studentnummer");
 		        String aanwezig = ""+obj.getBoolean("aanwezig");
 		        writer.append(id+","+naam+","+aanwezig+"\n");
-		    }				
+		    }
 		    //generate whatever data you want
-				
+
 		    writer.flush();
 		    writer.close();
 		}
 		catch(IOException e)
 		{
 		     e.printStackTrace();
-		} 
-		
-		
-		
+		}
+
+
+
 	}
-	
+
 	public void getRooster(Conversation conversation){
 		ArrayList<RoosterElement> roosterElementen = this.informatieSysteem.getRooster();
-		
+
 		JsonArrayBuilder jab = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...
 
-		for (RoosterElement roosterElement : roosterElementen) {									// met daarin voor elke medestudent een JSON-object... 
+		for (RoosterElement roosterElement : roosterElementen) {									// met daarin voor elke medestudent een JSON-object...
 				ArrayList<Les> lessen = roosterElement.getLessen();
 				for (Les les : lessen) {
 					jab.add(
@@ -135,10 +135,10 @@ public class RoosterController implements Handler {
 							);
 				}
 		}
-		
+
 		conversation.sendJSONMessage(jab.build().toString());
 	}
-	
+
 	public void getAanwezigen(Conversation conversation){
 		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String datum = jsonObjectIn.getString("datum");
@@ -146,14 +146,14 @@ public class RoosterController implements Handler {
 		String beginTijd = jsonObjectIn.getString("beginTijd");
 		String eindTijd = jsonObjectIn.getString("eindTijd");
 		String docentNaam = jsonObjectIn.getString("docentNaam");
-		
+
 		JsonArrayBuilder jab = Json.createArrayBuilder();
 		System.out.print(datum);
-		if(!datum.equals("2-2-2016")){
+		if(!datum.equals("2-1-2016")){
 			conversation.sendJSONMessage(jab.build().toString());
 			return;
 		}
-		
+
 		BufferedReader br = null;
 		String line = "";
 		final String delimiter = ",";
@@ -176,7 +176,7 @@ public class RoosterController implements Handler {
 							.add("aanwezig",Boolean.valueOf(l[5])));
 				}
 			}
-			
+
 		}
 		catch(IOException ioe)
 		{
@@ -184,14 +184,14 @@ public class RoosterController implements Handler {
 		}
 		conversation.sendJSONMessage(jab.build().toString());
 	}
-	
+
 	public void getStudentAanwezigheid(Conversation conversation){
 		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String studentnummer = jsonObjectIn.getString("studentnummer");
-		
+
 		JsonArrayBuilder jab = Json.createArrayBuilder();
-		
-		
+
+
 		File folder = new File("src/resource/absenties/");
 		File[] listOfFiles = folder.listFiles();
 
@@ -219,7 +219,7 @@ public class RoosterController implements Handler {
 									);
 						}
 					}
-					
+
 				}
 				catch(IOException ioe)
 				{
@@ -227,7 +227,7 @@ public class RoosterController implements Handler {
 				}
 		      }
 		    }
-		    
+
 		    conversation.sendJSONMessage(jab.build().toString());
 	}
 }

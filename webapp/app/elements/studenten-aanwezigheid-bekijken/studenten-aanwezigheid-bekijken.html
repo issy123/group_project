@@ -139,7 +139,7 @@
         absentieHandler:function(){
 
         },
-        
+
         aanwezigenResponseHandler:function(request){
             this.bekijktAanwezigen = true;
             if(request.detail.response.length == 0){
@@ -148,7 +148,7 @@
                 console.log("empty");
                 return;
             }
-            
+
             this.aanwezigen = request.detail.response;
             for(var i = 0; i < this.aanwezigen.length;i++){
                 this.aanwezigen[i].aanwezig = this.aanwezigen[i].aanwezig ? "Ja" : "Nee";
@@ -156,7 +156,7 @@
             this.heeftAanwezigen = true;
             console.log("not empty");
         },
-        
+
         reset:function(){
             this.empty = false;
             this.bekijktAanwezigen = false;
@@ -191,7 +191,7 @@
               this.$.lessenOphalen.contentType="application/json";
               this.$.lessenOphalen.body={
                 "naam":this.docentnaam,
-                "datum":"02/02/2016"
+                "datum":"01/02/2016"
               };
               this.$.lessenOphalen.generateRequest();
           }

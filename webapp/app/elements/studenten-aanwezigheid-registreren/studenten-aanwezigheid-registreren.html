@@ -111,7 +111,7 @@
           },
           datum: {
               type: String,
-              value: "02/02/2016"
+              value: "01/02/2016"
           }
         },
 
@@ -126,7 +126,7 @@
         lessenResponseHandler:function(request){
             this.lessen = request.detail.response;
         },
-        
+
         absentieResponseHandler:function(){
             alert("Successvol verzonden!");
             this.reset();
@@ -135,7 +135,7 @@
         absentieHandler:function(){
             this.$.absentiesMelden.contentType="application/json";
               this.$.absentiesMelden.body={
-                "datum":this.formatDatum("02/02/2016"),
+                "datum":this.formatDatum("01/02/2016"),
                 "les":this.item.vaknaam,
                 "begintijd":this.item.begintijd,
                 "eindtijd":this.item.eindtijd,
@@ -143,12 +143,12 @@
                 "absenties":this.studenten
               };
               this.$.absentiesMelden.generateRequest();
-              
-              
+
+
         },
-        
+
         formatDatum:function(){
-            var date = new Date("02/02/2016");
+            var date = new Date("01/02/2016");
             return date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
         },
         reset:function(){
