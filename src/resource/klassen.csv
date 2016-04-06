@@ -1,4 +1,4 @@
-1682250;Abï¿½_cherli;;Ramon;SIE-V1A;FALSE
+1682250;Ab?¿½_cherli;;Ramon;SIE-V1A;FALSE
 1683847;Amhagi;;Yassin;SIE-V1A;FALSE
 1685676;Arab;;Fahim;SIE-V1A;FALSE
 1644126;Ashtari;;Farshid;SIE-V1A;FALSE
@@ -10,7 +10,7 @@
 1691589;Grobben;;Robbert;SIE-V1A;FALSE
 1690977;Haaften;van;Boaz;SIE-V1A;FALSE
 1650800;Hogeterp;;Daphne;SIE-V1A;FALSE
-1686537;Hï¿½_nneman;;Boris;SIE-V1A;FALSE
+1686537;H?¿½_nneman;;Boris;SIE-V1A;FALSE
 1683831;Jonker;;Wouter;SIE-V1A;FALSE
 1664381;Karimi;;Elias;SIE-V1A;FALSE
 1685650;Kleinveld;;Ralph;SIE-V1A;FALSE
@@ -112,6 +112,7 @@
 1661034;Reukers;;Casper;SIE-V1D;FALSE
 1682660;Rijkeboer;;Marten;SIE-V1D;FALSE
 1682773;Shelomov;;Dmytro;SIE-V1D;FALSE
+1689806;?¿½_im?¿½?¿½ir;;Erol;SIE-V1D;FALSE
 1678872;Sjouw;;Arthur;SIE-V1D;FALSE
 1683065;Stoker;;Bram;SIE-V1D;FALSE
 1663356;Terpstra;;Nick;SIE-V1D;FALSE
@@ -130,7 +131,7 @@
 1686567;Bloot;;Pim;SIE-V1E;FALSE
 1680133;Boesenach;;Lars;SIE-V1E;FALSE
 1681466;Bouhdifi;El;Anwar;SIE-V1E;FALSE
-1672055;Bruin;de;Sander;SIE-V1E;FALSE
+1672055;Bruin;de;Sander;SIE-V1E;TRUE
 1673398;Exel;van;Philip;SIE-V1E;FALSE
 1677361;Graaf;de;Johan;SIE-V1E;FALSE
 1678108;Groenewegen;;Berthold;SIE-V1E;FALSE

@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.json.Json;
@@ -94,16 +93,11 @@ public class Application {
 		server.registerHandler("/login", userController);
 		server.registerHandler("/docent/mijnvakken", docentController);
 		server.registerHandler("/rooster/lessen", roosterController);
-		server.registerHandler("/rooster/absenties", roosterController);
-		server.registerHandler("/rooster/aanwezigen", roosterController);
-		server.registerHandler("/rooster/aanwezigheid", roosterController);
-		server.registerHandler("/rooster", roosterController);
 		server.registerHandler("/docent/mijnrapport", docentController);
 		server.registerHandler("/student/mijnmedestudenten", studentController);
 		server.registerHandler("/student/toonziekmelden", studentController);
 		server.registerHandler("/student/vanklas", studentController);
 		server.registerHandler("/student", studentController);
-		server.registerHandler("/student/allezieken", studentController);
 		
 		server.start();
 	}
@@ -178,8 +172,7 @@ public class Application {
 				Boolean bestaatNiet = true;
 				//voeg les toe aan bestaande rooster element indien het al bestaat
 				for (RoosterElement roosterElement : roosterElementLijst) {
-					String currentDatum = roosterElement.getDatum();
-					if(currentDatum.equals(l[0])){
+					if(roosterElement.getDatum() == l[0]){
 						String docentNaam = l[4];
 						Les les = new Les(l[3],l[1],l[2],l[5],l[6]);
 						roosterElement.voegLesToe(docentNaam, les);

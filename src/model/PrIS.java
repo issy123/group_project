@@ -42,6 +42,7 @@ public class PrIS {
 	}
 	
 	public ArrayList<Les> getLessen(String datum, String docentNaam){
+		Docent d = null;
 		for(HashMap.Entry<String,RoosterElement> entry : mijnRoosterElementen.entrySet())
 		{
 			if(entry.getKey().equals(datum))
@@ -49,16 +50,8 @@ public class PrIS {
 				return entry.getValue().getLessen(docentNaam);
 			}
 		}
-		ArrayList<Les> lessen = new ArrayList<Les>();
-		return lessen;
-	}
-	public ArrayList<RoosterElement> getRooster(){
-		ArrayList<RoosterElement> roosterElementen = new ArrayList<RoosterElement>();
-		for(HashMap.Entry<String,RoosterElement> entry : mijnRoosterElementen.entrySet())
-		{
-				roosterElementen.add(entry.getValue());
-		}
-		return roosterElementen;
+		
+		return null;
 	}
 
 	public Docent getDocent(String gebruikersnaam) {

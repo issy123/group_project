@@ -111,18 +111,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-icon icon="social:group"></iron-icon>
             <span>Toon medestudenten</span>
           </a>
-          <a data-route="absentiebekijken" href="{{baseUrl}}absentie-bekijken" hidden="{{!roldocent}}">
-            <iron-icon icon="social:group"></iron-icon>
-            <span>Absentie bekijken</span>
-          </a>
-            
-          <a data-route="absentieinvoeren" href="{{baseUrl}}absentie-invoeren" hidden="{{!roldocent}}">
-            <iron-icon icon="icons:create"></iron-icon>
-            <span>Absentie invoeren</span>
-          </a>
-            <a data-route="toonabsentie" href="{{baseUrl}}absentietonen" hidden="{{!rolstudent}}">
-            <iron-icon icon="icons:chrome-reader-mode"></iron-icon>
-            <span>Absentie tonen</span>
+
+          <a data-route="aanwezigheidregistreren" href="{{baseUrl}}aanwezigheid" hidden="{{!roldocent}}">
+            <iron-icon icon="create"></iron-icon>
+            <span>Aanwezigheid registreren</span>
           </a>
 
           <a data-route="mijnrapport" href="{{baseUrl}}report" hidden="{{!roldocent}}">
@@ -197,19 +189,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <section data-route="aanwezigheidregistreren">
               <paper-material elevation="1">
-                <studenten-aanwezigheid-registreren rol="[[rol]]" username="[[username]]" docentnaam="{{docentnaam}}"></studenten-aanwezigheid-registreren>
-              </paper-material>
-            </section>
-              
-            <section data-route="aanwezigheidbekijken">
-              <paper-material elevation="1">
-                <studenten-aanwezigheid-bekijken rol="[[rol]]" username="[[username]]" docentnaam="{{docentnaam}}"></studenten-aanwezigheid-bekijken>
-              </paper-material>
-            </section>
-              
-            <section data-route="toonabsentie">
-              <paper-material elevation="1">
-                <absentie-tonen rol="[[rol]]" username="[[username]]"></absentie-tonen>
+                <studenten-aanwezigheid rol="[[rol]]" username="[[username]]" docentnaam="{{docentnaam}}"></studenten-aanwezigheid>
               </paper-material>
             </section>
 

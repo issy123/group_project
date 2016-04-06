@@ -46,9 +46,6 @@ public class StudentController implements Handler {
 		if (conversation.getRequestedURI().startsWith("/student/vanklas")) {
 			studentenVanKlas(conversation);
 		}
-		if (conversation.getRequestedURI().startsWith("/student/allezieken")) {
-			alleZieken(conversation);
-		}
 	}
 
 	/**
@@ -158,22 +155,5 @@ public class StudentController implements Handler {
 			ioe.printStackTrace();
 		}
 	}
-
-	public void alleZieken(Conversation conversation){
-		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
-		String klasCode = jsonObjectIn.getString("klas");
-		ArrayList<Student> alleZieken = informatieSysteem.getStudentenVanKlas(klasCode);
-
-		JsonArrayBuilder jab = Json.createArrayBuilder();
-
-		for (Student s : alleZieken) {
-			jab.add(Json.createObjectBuilder()
-					.add("studentnummer", s.getStudentNummer())
-					.add("ziek", s.isZiek()));
-		}
-
-		conversation.sendJSONMessage(jab.build().toString());
-	}
-
 }
 

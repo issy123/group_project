@@ -6,7 +6,6 @@ public class Les {
 	private String einddatum;
 	private String lokaal;
 	private String klas;
-	private String docentNaam;
 	
 	public Les(String vaknaam,String begindatum, String einddatum, String lokaal, String klas){
 		this.vaknaam = vaknaam;
@@ -14,10 +13,6 @@ public class Les {
 		this.einddatum = einddatum;
 		this.lokaal = lokaal;
 		this.klas = klas;
-	}
-	
-	public void setDocent(String docentNaam){
-		this.docentNaam = docentNaam;
 	}
 	
 	public String getBegindatum(){
@@ -38,8 +33,5 @@ public class Les {
 	
 	public String getKlas(){
 		return this.klas;
-	}
-	public String getDocent(){
-		return this.docentNaam;
 	}
 }
