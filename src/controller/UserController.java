@@ -74,7 +74,6 @@ class UserController implements Handler {
 		objectBuilder.add("naam", naam);
 		
 		String jsonIn = objectBuilder.build().toString();
-		
 		conversation.sendJSONMessage(jsonIn);
 		/*JsonObjectBuilder job = Json.createObjectBuilder().add("rol", rol);// en teruggekregen gebruikersrol als JSON-object...	
 		String jsonOut = job.build().toString();
