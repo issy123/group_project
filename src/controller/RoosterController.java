@@ -171,6 +171,8 @@ public class RoosterController implements Handler {
 					jab.add(
 							Json.createObjectBuilder()
 							.add("studentnummer",l[4])
+							.add("voornaam", this.informatieSysteem.getStudent(l[4]).getVoorNaam())
+							.add("achternaam", this.informatieSysteem.getStudent(l[4]).getAchterNaam())
 							.add("aanwezig",Boolean.valueOf(l[5])));
 				}
 			}
