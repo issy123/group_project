@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.json.Json;
@@ -93,6 +94,9 @@ public class Application {
 		server.registerHandler("/login", userController);
 		server.registerHandler("/docent/mijnvakken", docentController);
 		server.registerHandler("/rooster/lessen", roosterController);
+		server.registerHandler("/rooster/absenties", roosterController);
+		server.registerHandler("/rooster/aanwezigen", roosterController);
+		server.registerHandler("/rooster", roosterController);
 		server.registerHandler("/docent/mijnrapport", docentController);
 		server.registerHandler("/student/mijnmedestudenten", studentController);
 		server.registerHandler("/student/toonziekmelden", studentController);

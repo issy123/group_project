@@ -112,9 +112,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span>Toon medestudenten</span>
           </a>
 
-          <a data-route="aanwezigheidregistreren" href="{{baseUrl}}aanwezigheid" hidden="{{!roldocent}}">
+          <a data-route="absentiebekijken" href="{{baseUrl}}absentie-bekijken" hidden="{{!roldocent}}">
             <iron-icon icon="social:group"></iron-icon>
-            <span>Aanwezigheid registreren</span>
+            <span>Absentie bekijken</span>
+          </a>
+            
+          <a data-route="absentieinvoeren" href="{{baseUrl}}absentie-invoeren" hidden="{{!roldocent}}">
+            <iron-icon icon="social:group"></iron-icon>
+            <span>Absentie invoeren</span>
           </a>
 
           <a data-route="mijnrapport" href="{{baseUrl}}report" hidden="{{!roldocent}}">
@@ -188,7 +193,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <section data-route="aanwezigheidregistreren">
               <paper-material elevation="1">
-                <studenten-aanwezigheid rol="[[rol]]" username="[[username]]" docentnaam="{{docentnaam}}"></studenten-aanwezigheid>
+                <studenten-aanwezigheid-registreren rol="[[rol]]" username="[[username]]" docentnaam="{{docentnaam}}"></studenten-aanwezigheid-registreren>
+              </paper-material>
+            </section>
+              
+            <section data-route="aanwezigheidbekijken">
+              <paper-material elevation="1">
+                <studenten-aanwezigheid-bekijken rol="[[rol]]" username="[[username]]" docentnaam="{{docentnaam}}"></studenten-aanwezigheid-bekijken>
               </paper-material>
             </section>
 

@@ -6,7 +6,7 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
-<dom-module id="studenten-aanwezigheid">
+<dom-module id="studenten-aanwezigheid-bekijken">
   <template>
     <style>
       :host {
@@ -18,8 +18,14 @@
       }
     </style>
 
-    <h1 class="page-title">Aanwezigheid registreren</h1>
-    <form class="studentenlijst" hidden="{{!les}}">
+    <h1 class="page-title">Absentie bekijken</h1>
+    <div hidden="{{!empty}}">
+        <p><b>Helaas</b></p>
+        <p>Voor deze datum is er geen absentie geregistreerd</p>
+        <a on-click="reset"><iron-icon icon="icons:arrow-back"></iron-icon>Terug</a>
+    </div>
+    <form class="studentenlijst" hidden="{{!heeftAanwezigen}}">
+        <a on-click="reset"><iron-icon icon="icons:arrow-back"></iron-icon>Terug</a>
         <table>
           <tr>
             <th>Aanwezig</th>
@@ -27,24 +33,26 @@
             <th>Voornaam</th>
             <th>Achternaam</th>
           </tr>
-          <template is="dom-repeat" items="{{studenten}}">
+          <template is="dom-repeat" items="{{aanwezigen}}">
             <tr>
-              <td><paper-checkbox checked="{{item.checked}}"></paper-checkbox></td>
+              <td>{{item.aanwezig}}</td>
               <td>{{item.studentnummer}}</td>
               <td>{{item.voornaam}}</td>
               <td>{{item.achternaam}}</td>
             </tr>
           </template>
         </table>
-        <paper-button on-click="absentieHandler">Verzenden</paper-button>
     </form>
 
-    <table onload="onPageLoad" hidden="{{les}}">
+    <table onload="onPageLoad" hidden="{{bekijktAanwezigen}}">
         <thead>
             <tr>
+                <th></th>
+                <th>Datum</th>
                 <th>Les</th>
-                <th>Begintijd</th>
-                <th>Eindtijd</th>
+                <th>Docent</th>
+                <th>Van</th>
+                <th>Tot</th>
                 <th>Lokaal</th>
                 <th>Klas</th>
             </tr>
@@ -52,10 +60,12 @@
         <tbody>
         <template is="dom-repeat" items="{{lessen}}">
             <tr>
-              <td><a href="#" on-click="studentenlijstOphalen">Absentie</a></td>
+              <td><iron-icon icon="icons:chevron-right" on-click="aanwezigheidOphalen"></iron-icon></td>
+              <td>{{item.datum}}</td>
               <td>{{item.vaknaam}}</td>
-              <td>{{item.begindatum}}</td>
-              <td>{{item.einddatum}}</td>
+              <td>{{item.docent}}</td>
+              <td>{{item.begintijd}}</td>
+              <td>{{item.eindtijd}}</td>
               <td>{{item.lokaal}}</td>
               <td>{{item.klas}}</td>
             </tr>
@@ -74,17 +84,17 @@
     <iron-ajax
         id="lessenOphalen"
         method="POST"
-        url="/rooster/lessen"
+        url="/rooster"
         handle-as="json"
         on-response="lessenResponseHandler"
     >
     </iron-ajax>
     <iron-ajax
-        id="absentiesMelden"
+        id="aanwezigenOphalen"
         method="POST"
-        url="/rooster/absenties"
+        url="/rooster/aanwezigen"
         handle-as="json"
-        on-response="absentieResponseHandler"
+        on-response="aanwezigenResponseHandler"
     >
     </iron-ajax>
 
@@ -95,7 +105,7 @@
       'use strict';
 
       Polymer({
-        is: 'studenten-aanwezigheid',
+        is: 'studenten-aanwezigheid-bekijken',
 
         properties: {
           username: String,
@@ -103,10 +113,18 @@
           rol: {
             observer:'fetch'
           },
-          les: {
-              type: String,
-              value: ""
+          empty: {
+              type: Boolean,
+              value: false
           },
+          aanwezigen:{
+              type: Array,
+              value: []
+          },
+          heeftAanwezigen:{
+              type: Boolean,
+              value: false
+          }
         },
 
         responseHandler: function(request) {
@@ -121,18 +139,50 @@
         absentieHandler:function(){
 
         },
+        
+        aanwezigenResponseHandler:function(request){
+            this.bekijktAanwezigen = true;
+            if(request.detail.response.length == 0){
+                this.empty = true;
+                this.heeftAanwezigen = false;
+                console.log("empty");
+                return;
+            }
+            
+            this.aanwezigen = request.detail.response;
+            for(var i = 0; i < this.aanwezigen.length;i++){
+                this.aanwezigen[i].aanwezig = this.aanwezigen[i].aanwezig ? "Ja" : "Nee";
+            }
+            this.heeftAanwezigen = true;
+            console.log("not empty");
+        },
+        
+        reset:function(){
+            this.empty = false;
+            this.bekijktAanwezigen = false;
+            this.heeftAanwezigen = false;
+        },
 
-        studentenlijstOphalen:function(e){
+        aanwezigheidOphalen:function(e){
 
-            this.$.studentenOphalen.contentType="application/json";
-            this.$.studentenOphalen.body={
-              "klas":e.model.item.klas.replace("-","_")
+            this.$.aanwezigenOphalen.contentType="application/json";
+            this.$.aanwezigenOphalen.body={
+              "datum":this.formatDatum(e.model.item.datum),
+              "les":e.model.item.vaknaam,
+              "beginTijd":e.model.item.begintijd,
+              "eindTijd":e.model.item.eindtijd,
+              "docentNaam":e.model.item.docent
             };
-            this.$.studentenOphalen.generateRequest();
+            this.$.aanwezigenOphalen.generateRequest();
 
             this.les = e.model.item.vaknaam;
             e.preventDefault();
             return false;
+        },
+        formatDatum:function(datum){
+            console.log("formatting datum:",datum);
+            var date = new Date(datum);
+            return date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
         },
 
         fetch: function() {

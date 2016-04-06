@@ -16,6 +16,7 @@ public class RoosterElement {
 	}
 	
 	public void voegLesToe(String docentNaam, Les les){
+		les.setDocent(docentNaam);
 		//voeg les toe aan bestaande docent
 		for(HashMap.Entry<String,ArrayList<Les>> entry : docenten.entrySet())
 		{
@@ -47,6 +48,15 @@ public class RoosterElement {
 		}
 		
 		return null;
+	}
+	
+	public ArrayList<Les> getLessen(){
+		ArrayList<Les> lessen = new ArrayList<Les>();
+		for(HashMap.Entry<String,ArrayList<Les>> entry : docenten.entrySet())
+		{
+				lessen.addAll(entry.getValue());
+		}
+		return lessen;
 	}
 	
 	public String getDatum(){

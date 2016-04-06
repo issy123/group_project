@@ -1,0 +1,186 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="studenten-aanwezigheid-registreren">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      span {
+        @apply(--paper-font-body1);
+      }
+    </style>
+
+    <h1 class="page-title">Absentie invoeren</h1>
+    <form class="studentenlijst" hidden="{{!les}}">
+        <a on-click="reset"><iron-icon icon="icons:arrow-back"></iron-icon>Terug</a>
+        <table>
+          <tr>
+            <th>Aanwezig</th>
+            <th>Studentnummer</th>
+            <th>Voornaam</th>
+            <th>Achternaam</th>
+          </tr>
+          <template is="dom-repeat" items="{{studenten}}">
+            <tr>
+              <td><paper-checkbox checked="{{item.aanwezig}}"></paper-checkbox></td>
+              <td>{{item.studentnummer}}</td>
+              <td>{{item.voornaam}}</td>
+              <td>{{item.achternaam}}</td>
+            </tr>
+          </template>
+        </table>
+        <paper-button on-click="absentieHandler">Verzenden</paper-button>
+    </form>
+
+    <table onload="onPageLoad" hidden="{{les}}">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Les</th>
+                <th>Van</th>
+                <th>Tot</th>
+                <th>Lokaal</th>
+                <th>Klas</th>
+            </tr>
+        </thead>
+        <tbody>
+        <template is="dom-repeat" items="{{lessen}}">
+            <tr>
+              <td><iron-icon icon="icons:chevron-right" on-click="studentenlijstOphalen"></iron-icon></td>
+              <td>{{item.vaknaam}}</td>
+              <td>{{item.begintijd}}</td>
+              <td>{{item.eindtijd}}</td>
+              <td>{{item.lokaal}}</td>
+              <td>{{item.klas}}</td>
+            </tr>
+          </template>
+        </tbody>
+    </table>
+
+
+    <iron-ajax
+        id="studentenOphalen"
+        method="POST"
+        url="/student/vanklas"
+        handle-as="json"
+        on-response="studentenResponseHandler">
+    </iron-ajax>
+    <iron-ajax
+        id="lessenOphalen"
+        method="POST"
+        url="/rooster/lessen"
+        handle-as="json"
+        on-response="lessenResponseHandler"
+    >
+    </iron-ajax>
+    <iron-ajax
+        id="absentiesMelden"
+        method="POST"
+        url="/rooster/absenties"
+        handle-as="json"
+        on-response="absentieResponseHandler"
+    >
+    </iron-ajax>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'studenten-aanwezigheid-registreren',
+
+        properties: {
+          username: String,
+          docentnaam: String,
+          rol: {
+            observer:'fetch'
+          },
+          les: {
+              type: String,
+              value: ""
+          },
+          datum: {
+              type: String,
+              value: "02/02/2016"
+          }
+        },
+
+        studentenResponseHandler: function(request) {
+          console.log(request.detail.response);
+          this.studenten = request.detail.response;
+          for(var i =0;i < this.studenten.length;i++){
+              this.studenten[i].aanwezig = false;
+          }
+        },
+
+        lessenResponseHandler:function(request){
+            this.lessen = request.detail.response;
+        },
+        
+        absentieResponseHandler:function(){
+            alert("Successvol verzonden!");
+            this.reset();
+        },
+
+        absentieHandler:function(){
+            this.$.absentiesMelden.contentType="application/json";
+              this.$.absentiesMelden.body={
+                "datum":this.formatDatum("02/02/2016"),
+                "les":this.item.vaknaam,
+                "begintijd":this.item.begintijd,
+                "eindtijd":this.item.eindtijd,
+                "docentNaam":this.docentnaam,
+                "absenties":this.studenten
+              };
+              this.$.absentiesMelden.generateRequest();
+              
+              
+        },
+        
+        formatDatum:function(){
+            var date = new Date("02/02/2016");
+            return date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
+        },
+        reset:function(){
+            this.les = "";
+            this.studenten = [];
+        },
+
+        studentenlijstOphalen:function(e){
+
+            this.$.studentenOphalen.contentType="application/json";
+            this.$.studentenOphalen.body={
+              "klas":e.model.item.klas.replace("-","_")
+            };
+            this.$.studentenOphalen.generateRequest();
+            this.item = e.model.item;
+            this.les = e.model.item.vaknaam;
+            e.preventDefault();
+            return false;
+        },
+
+        fetch: function() {
+          console.log(this.docentnaam);
+            if(this.rol==="docent"){
+              this.$.lessenOphalen.contentType="application/json";
+              this.$.lessenOphalen.body={
+                "naam":this.docentnaam,
+                "datum":this.datum
+              };
+              this.$.lessenOphalen.generateRequest();
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>
