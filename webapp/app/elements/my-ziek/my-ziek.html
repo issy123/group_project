@@ -19,7 +19,7 @@
     <h1 class="page-title">Ziek melden</h1>
     <p>Op deze pagina kunt u zichzelf ziek melden. Klik op de onderstaande knop om dit te doen.<br>De docent krijgt automatisch bericht van uw afmelding.</p>
 
-    <paper-button raised on-click="ziekHandler" id="ziekButton">Meld ziek</paper-button><i><p id="status"></p></i>
+    <paper-button raised on-click="ziekHandler" id="ziekButton">Meld Ziek/Beter</paper-button><i><p id="status"></p></i>
 
     <iron-ajax
       id="ajax"
@@ -58,12 +58,27 @@
     },
 
     ziekHandler: function() {
-      if(this.username=="")
+      if(this.username==="")
       {
         page.redirect(app.baseUrl);
       }
       console.log("ziekHandler user="+this.username);
-      if (this.rol == "student") {
+      if (this.rol === "student") {
+        this.$.ajax.contentType="application/json";
+        this.$.ajax.body={
+          "username":this.username
+        };
+        this.$.ajax.generateRequest();
+      }
+    },
+
+    checkZiek: function(){
+      console.log("checking");
+      if(this.username==="")
+      {
+        page.redirect(app.baseUrl);
+      }
+      if (this.rol === "student") {
         this.$.ajax.contentType="application/json";
         this.$.ajax.body={
           "username":this.username
