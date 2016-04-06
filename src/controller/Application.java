@@ -103,6 +103,7 @@ public class Application {
 		server.registerHandler("/student/toonziekmelden", studentController);
 		server.registerHandler("/student/vanklas", studentController);
 		server.registerHandler("/student", studentController);
+		server.registerHandler("/student/allezieken", studentController);
 		
 		server.start();
 	}
