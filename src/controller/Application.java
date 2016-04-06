@@ -96,6 +96,7 @@ public class Application {
 		server.registerHandler("/rooster/lessen", roosterController);
 		server.registerHandler("/rooster/absenties", roosterController);
 		server.registerHandler("/rooster/aanwezigen", roosterController);
+		server.registerHandler("/rooster/aanwezigheid", roosterController);
 		server.registerHandler("/rooster", roosterController);
 		server.registerHandler("/docent/mijnrapport", docentController);
 		server.registerHandler("/student/mijnmedestudenten", studentController);

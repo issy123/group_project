@@ -35,6 +35,9 @@ public class RoosterController implements Handler {
 		else if (conversation.getRequestedURI().startsWith("/rooster/aanwezigen")) {
 			getAanwezigen(conversation);
 		}
+		else if (conversation.getRequestedURI().startsWith("/rooster/aanwezigheid")) {
+			getStudentAanwezigheid(conversation);
+		}
 		else if (conversation.getRequestedURI().startsWith("/rooster")) {
 			getRooster(conversation);
 		}
@@ -147,12 +150,9 @@ public class RoosterController implements Handler {
 		JsonArrayBuilder jab = Json.createArrayBuilder();
 		System.out.print(datum);
 		if(!datum.equals("2-2-2016")){
-			System.out.print("niet goeie datum");
 			conversation.sendJSONMessage(jab.build().toString());
 			return;
 		}
-		
-		System.out.print("ik ben er2");
 		
 		BufferedReader br = null;
 		String line = "";
@@ -181,5 +181,51 @@ public class RoosterController implements Handler {
 			ioe.printStackTrace();
 		}
 		conversation.sendJSONMessage(jab.build().toString());
+	}
+	
+	public void getStudentAanwezigheid(Conversation conversation){
+		JsonObject jsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		String studentnummer = jsonObjectIn.getString("studentnummer");
+		
+		JsonArrayBuilder jab = Json.createArrayBuilder();
+		
+		
+		File folder = new File("src/resource/absenties/");
+		File[] listOfFiles = folder.listFiles();
+
+		    for (int i = 0; i < listOfFiles.length; i++) {
+		      if (listOfFiles[i].isFile()) {
+		        System.out.println("File " + listOfFiles[i].getName());
+		        BufferedReader br = null;
+				String line = "";
+				final String delimiter = ",";
+				try{
+					br = new BufferedReader(new FileReader("src/resource/absenties/"+listOfFiles[i].getName()));//van de datum die we zoeken
+					while((line = br.readLine()) != null)
+					{
+						String[] l = line.split(delimiter);
+						if( //van de les die we zoeken
+								studentnummer.equals(l[4])
+								){
+							jab.add(
+									Json.createObjectBuilder()
+									.add("datum",listOfFiles[i].getName().replaceFirst("[.][^.]+$", ""))
+									.add("les",l[0])
+									.add("van",l[1])
+									.add("tot",l[2])
+									.add("aanwezig",Boolean.valueOf(l[5]))
+									);
+						}
+					}
+					
+				}
+				catch(IOException ioe)
+				{
+					ioe.printStackTrace();
+				}
+		      }
+		    }
+		    
+		    conversation.sendJSONMessage(jab.build().toString());
 	}
 }
